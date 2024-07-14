@@ -1,0 +1,416 @@
+[
+  {
+    "bunkerID": 7,
+    "xPosition": -7.3605,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -14.31,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 7,
+    "xPosition": 0,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -14.31,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 7,
+    "xPosition": 7.3605,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -14.31,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 6,
+    "xPosition": -17.5275,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -12.942,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 6,
+    "xPosition": 17.5275,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -12.942,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 13,
+    "xPosition": -9.837,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -12.534,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 13,
+    "xPosition": 9.837,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -12.534,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 29,
+    "xPosition": -3.582,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -12.414,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 29,
+    "xPosition": 3.582,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -12.414,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 14,
+    "xPosition": -8.7615,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -11.826,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 14,
+    "xPosition": -5.6265,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -11.826,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 14,
+    "xPosition": 5.6265,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -11.826,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 14,
+    "xPosition": 8.7615,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -11.826,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 14,
+    "xPosition": -1.5435,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -11.811,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 14,
+    "xPosition": 1.5435,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -11.811,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 26,
+    "xPosition": -13.2675,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 90,
+    "zPosition": -9.21,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 26,
+    "xPosition": 13.2675,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 270,
+    "zPosition": -9.21,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 3,
+    "xPosition": -4.6455,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 180,
+    "zPosition": -7.278,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 3,
+    "xPosition": 4.6455,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 180,
+    "zPosition": -7.278,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 25,
+    "xPosition": -17.1135,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 90,
+    "zPosition": -6.081,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 25,
+    "xPosition": 17.1135,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 270,
+    "zPosition": -6.081,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 1,
+    "xPosition": 0,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 90,
+    "zPosition": -3.075,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 10,
+    "xPosition": -13.158,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -2.5035,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 10,
+    "xPosition": 13.158,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": -2.5035,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 5,
+    "xPosition": -19.0875,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 0.0315,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 5,
+    "xPosition": 19.0875,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 0.0315,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 6,
+    "xPosition": -7.5165,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 0.7455,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 6,
+    "xPosition": 7.5165,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 0.7455,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 7,
+    "xPosition": 0,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 2.139,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 3,
+    "xPosition": -4.587,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 4.9245,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 3,
+    "xPosition": 4.587,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 4.9245,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 10,
+    "xPosition": -19.23,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 6.1035,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 5,
+    "xPosition": -11.373,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 6.1035,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 5,
+    "xPosition": 11.373,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 6.1035,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 10,
+    "xPosition": 19.23,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 6.1035,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 1,
+    "xPosition": 0,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 90,
+    "zPosition": 9.186,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 11,
+    "xPosition": -4.557,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 9.5475,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 11,
+    "xPosition": 4.557,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 9.5475,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 8,
+    "xPosition": -15.783,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 10.962,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 8,
+    "xPosition": 15.783,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 10.962,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 9,
+    "xPosition": -11.2665,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 12.651,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 9,
+    "xPosition": 11.2665,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 12.651,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 8,
+    "xPosition": -6.657,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 12.834,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 8,
+    "xPosition": 6.657,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 12.834,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 8,
+    "xPosition": -2.5035,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 13.974,
+    "zRotation": 0
+  },
+  {
+    "bunkerID": 8,
+    "xPosition": 2.5035,
+    "xRotation": 0,
+    "yPosition": 0,
+    "yRotation": 0,
+    "zPosition": 13.974,
+    "zRotation": 0
+  }
+]

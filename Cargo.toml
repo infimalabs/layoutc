@@ -1,0 +1,14 @@
+[package]
+name = "layoutc"
+version = "0.1.0"
+description = "Speedball arenas to splatmap atlases."
+authors = ["Infima Labs <infimalabs@infimalabs.com>"]
+edition = "2021"
+
+[dependencies]
+png = "0.17.13"
+serde = { version = "1.0.202", features = ["derive"] }
+serde_json = "1.0.117"
+
+[[bin]]
+name = "layoutc"

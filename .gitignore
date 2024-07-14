@@ -1,0 +1,23 @@
+# -- Rust
+# Ignore the build output
+/target/
+
+# -- Python
+# Ignore the build output
+/build/
+
+# Ignore Cargo's lock file because it's not used
+# to determine versions of consumers of the library, Cargo.toml is.
+# It's excluded to avoid confusion, but could be included if desired.
+# More Info: https://doc.rust-lang.org/cargo/faq.html#why-have-cargolock-in-version-control
+Cargo.lock
+
+# -- VSCode
+.vscode/
+
+# -- Misc
+layout*.json
+layout*.png
+layout*.txt
+*.egg-info
+__pycache__/
