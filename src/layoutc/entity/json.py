@@ -47,7 +47,7 @@ class Entity(entity.Entity):
     def load(cls, fp:io.BufferedReader, codec:codec.Codec|None=None, /, **kwds):
         """Load JSON entities from a file pointer."""
         if codec is None:
-            return fp.peek(256).translate(None, delete=b' \t\n').startswith((b'[[', b'[{'))
+            return fp.peek(256).translate(None, delete=b' \t\r\n').startswith((b'[[', b'[{'))
 
         li = json.load(fp, object_hook=cls.make)
         li = li if isinstance(li, list) else [li]
