@@ -4,6 +4,8 @@
 [![Changelog](https://img.shields.io/github/v/release/infimalabs/layoutc?include_prereleases&label=changelog)](https://github.com/infimalabs/layoutc/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/infimalabs/layoutc/blob/main/LICENSE)
 
+> **Copy-Paste Ready**: All Python examples work with `pip install -e .` and can be copied (or piped) directly into `python3`. Examples use the included tournament layout files.
+
 `layoutc` is a command-line utility and Python library for encoding and decoding spatial entity layouts in speedball arena formats. It supports converting between JSON-based layout representations and PNG-based splatmap atlases.
 
 Speedball is a competitive paintball format featuring symmetrical field layouts with inflatable bunkers. This tool helps manage and convert layout data between different formats used by tournament software, game engines, and visualization tools.
@@ -37,17 +39,86 @@ pip install layoutc
 
 ## Quick Start
 
-The most common use case is converting tournament layout files:
+To test any code block:
+
+1. **Windows**: Copy the code, then paste into `python3`
+2. **macOS**: Copy the code, then run `pbpaste | python3` in Terminal or paste into `python3`
+3. **Linux**: Copy the code, then run `xclip -o | python3` in a terminal or paste into `python3`
+
+If any example doesn't work, ensure you have:
+- Python 3.10+ installed
+- The `layoutc` repository cloned locally
+- Your terminal is in the `layoutc` project directory
+- Installed the package in editable mode: `pip install -e .`
+- Tried `python3 -m layoutc …` instead if `layoutc …` fails
+- Ensure your paste buffer contains what you expect
+
+One use case is converting tournament layout files:
 
 ```sh
-# Convert a JSON layout to PNG atlas for efficient storage
-layoutc tournament_layout.json compact_atlas.png
+# Convert a single layout to PNG atlas for efficient storage
+layoutc src/layouts/NXL-World-Cup-2021.json world_cup_2021.png
 
 # Convert PNG atlas back to JSON for editing
-layoutc compact_atlas.png editable_layout.json
+layoutc world_cup_2021.png world_cup_2021_copy.json
 
-# Convert multiple layouts into a single atlas
-layoutc layout1.json layout2.json layout3.json combined_atlas.png
+# Convert all World Cup layouts into a single combined atlas
+layoutc src/layouts/*World-Cup*.json all_world_cups.png
+
+# Output all layouts as TSV to stdout (pipe-friendly)
+layoutc src/layouts/*.json -
+```
+
+**Copy-paste test:**
+```python
+from layoutc.codec import Codec
+
+codec = Codec()
+with open("src/layouts/NXL-World-Cup-2021.json", "rb") as fp:
+    codec.load(fp)
+
+entities = list(codec)
+print(f"✓ Loaded {len(entities)} entities from World Cup 2021")
+print(f"✓ First entity: {entities[0]}")
+```
+
+**Complete workflow example:**
+```python
+from layoutc.codec import Codec
+from layoutc.entity import Entity
+from layoutc import Unit
+import glob
+import json
+
+# Load and analyze tournament data
+with open("src/layouts/NXL-Texas-2019.json", "r") as f:
+    texas_data = json.load(f)
+print(f"Loaded Texas 2019: {len(texas_data)} bunkers")
+
+# Convert to different formats
+codec = Codec()
+with open("src/layouts/NXL-Texas-2019.json", "rb") as fp:
+    codec.load(fp)
+
+with open("texas_atlas.png", "wb") as fp:
+    codec.dump(fp)
+
+# Work with entities directly
+for i, entity_data in enumerate(list(codec)[:3]):
+    entity = Entity(*entity_data)
+    display = entity.unfold(Unit.METER, Unit.DEGREE)
+    print(f"Bunker {i+1}: ({display.x:.1f}m, {display.y:.1f}m, {display.z:.0f}°)")
+
+# Create multi-layout atlas
+codec.clear()
+world_cup_files = glob.glob("src/layouts/NXL-World-Cup-*.json")
+for filename in world_cup_files:
+    with open(filename, "rb") as fp:
+        codec.load(fp)
+
+with open("all_world_cups.png", "wb") as fp:
+    codec.dump(fp)
+print(f"Created atlas from {len(world_cup_files)} World Cup layouts")
 ```
 
 For Python integration:
@@ -55,16 +126,15 @@ For Python integration:
 ```python
 from layoutc.codec import Codec
 
-# Simple conversion example
 codec = Codec()
 
-# Load from any format (auto-detected)
-with open("layout.json", "rb") as fp:
+with open("src/layouts/NXL-World-Cup-2021.json", "rb") as fp:
     codec.load(fp)
 
-# Save to any format (auto-detected)
-with open("atlas.png", "wb") as fp:
+with open("world_cup_atlas.png", "wb") as fp:
     codec.dump(fp)
+
+print("Converted NXL World Cup 2021 layout to PNG atlas!")
 ```
 
 ## Usage
@@ -76,19 +146,22 @@ The `layoutc` command-line tool supports conversion between JSON, PNG, and TSV f
 To encode multiple JSON layouts into a single PNG atlas:
 
 ```sh
-layoutc layout1.json layout2.json atlas.png
+# Combine 4 years of World Cup tournament layouts into one atlas
+layoutc src/layouts/NXL-World-Cup-{2018,2019,2020,2021}.json world_cups_atlas.png
 ```
 
 To decode a PNG atlas into a JSON layout:
 
 ```sh
-layoutc atlas.png layout.json
+# Convert back from PNG to JSON
+layoutc world_cups_atlas.png decoded_layouts.json
 ```
 
 To convert a layout to TSV format:
 
 ```sh
-layoutc layout.json layout.tsv
+# Convert single layout to TSV
+layoutc src/layouts/NXL-Barcelona-2019.json barcelona.tsv
 ```
 
 #### Command Syntax
@@ -98,6 +171,22 @@ layoutc [input ...] [output]
 ```
 
 The last argument is treated as the output file, and all preceding arguments are input files. Use `-` for stdin/stdout.
+
+Examples using the 23 included tournament layouts:
+```sh
+# Process all 23 tournament layouts to stdout as TSV
+layoutc src/layouts/*.json -
+
+# Create atlas from subset of tournaments
+layoutc src/layouts/NXL-*2021*.json tournaments_2021.png
+
+# Convert first layout to different formats
+layoutc src/layouts/NXL-Amsterdam-2019.json amsterdam.png
+layoutc src/layouts/NXL-Amsterdam-2019.json amsterdam.tsv
+
+# Pipe to other tools (all examples work with pbpaste | python)
+layoutc src/layouts/*.json - | head -10  # Show first 10 lines
+```
 
 #### Options
 
@@ -123,39 +212,41 @@ The `layoutc` library provides a `Codec` class for encoding and decoding spatial
 from layoutc.codec import Codec
 from layoutc.entity import Entity
 from layoutc import Unit
+import glob
 
 # Create a codec with default settings
 codec = Codec()
 
-# === Common Use Case: Load and convert layout files ===
-# Load from any supported format (JSON, PNG, TSV)
-with open("tournament_layout.json", "rb") as fp:
-    codec.load(fp)  # Automatically detects JSON format
+# Load and convert layout files
+with open("src/layouts/NXL-European-Champs-2021.json", "rb") as fp:
+    codec.load(fp)
 
-# Save to any supported format
-with open("atlas.png", "wb") as fp:
-    codec.dump(fp)  # Automatically detects PNG format
+with open("european_champs.png", "wb") as fp:
+    codec.dump(fp)
 
-# === Working with multiple layouts ===
+# Working with multiple layouts
 codec.clear()
-layout_files = ["layout1.json", "layout2.json", "layout3.json"]
+layout_files = glob.glob("src/layouts/NXL-*2022*.json")
 
 for filename in layout_files:
     with open(filename, "rb") as fp:
         codec.load(fp)
 
-# Save combined atlas
-with open("combined_atlas.png", "wb") as fp:
+with open("tournaments_2022.png", "wb") as fp:
     codec.dump(fp)
 
-# === Displaying entity information ===
-# Entities are stored in internal units but can be displayed in meters/degrees
-print("Layout entities:")
+print(f"Combined {len(layout_files)} 2022 tournament layouts into atlas!")
+
+# Displaying entity information
+codec.clear()
+with open("src/layouts/NXL-Las-Vegas-2019.json", "rb") as fp:
+    codec.load(fp)
+
+print("Las Vegas 2019 Layout entities:")
 for entity_data in codec:
     entity = Entity(*entity_data)
-    # Convert to user-friendly units for display
     display_entity = entity.unfold(Unit.METER, Unit.DEGREE)
-    print(f"Bunker at ({display_entity.x:.1f}m, {display_entity.y:.1f}m, {display_entity.z:.0f}°)")
+    print(f"Bunker {entity.k} at ({display_entity.x:.1f}m, {display_entity.y:.1f}m, {display_entity.z:.0f}°)")
 ```
 
 #### Advanced: Format-specific handling
@@ -171,22 +262,31 @@ Different file formats have different unit assumptions:
 
 ```python
 from layoutc.entity import json as json_entity
+from layoutc.codec import Codec
+from layoutc.entity import Entity
+from layoutc import Unit
+import json
 
-# === Working directly with JSON data ===
-json_data = {"xPosition": 1.5, "zPosition": 2.0, "yRotation": 90, "bunkerID": 2}
-entity = json_entity.Entity.make(json_data)
+codec = Codec()
+
+# Working directly with JSON data
+with open("src/layouts/NXL-Prague-2019.json", "r") as f:
+    tournament_data = json.load(f)
+
+first_bunker = tournament_data[0]
+entity = json_entity.Entity.make(first_bunker)
 codec.add(entity)
 
-# === Working with TSV/internal units ===
+# Working with TSV/internal units
 entity = Entity(x=1500, y=2000, z=5400)  # 1.5m, 2m, 90° in internal units
 codec.add(entity)
 
-# === Unit conversion ===
-# @ operator converts FROM internal units TO display units
-display_entity = internal_entity @ Unit.METER @ Unit.DEGREE
+# Unit conversion
+display_entity = entity @ Unit.METER @ Unit.DEGREE
+print(f"Display units: x={display_entity.x}m, y={display_entity.y}m, z={display_entity.z}°")
 
-# fold() method converts FROM display units TO internal units
 internal_entity = Entity(x=1, y=1, z=90).fold(Unit.METER, Unit.DEGREE)
+print(f"Internal units: x={internal_entity.x}mm, y={internal_entity.y}mm, z={internal_entity.z} arc-min")
 ```
 
 </details>
@@ -198,6 +298,65 @@ The `Entity` class represents a spatial entity (bunker) with `x`, `y`, `z` coord
 - **PNG atlases**: Efficient binary storage format for multiple layouts
 - **TSV files**: Tab-separated format for debugging and data analysis
 - **Automatic conversion**: The library handles unit conversions between formats transparently
+
+#### Practical Examples
+
+Here are complete, copy-pasteable examples using the included tournament data:
+
+**Convert all tournaments to different formats:**
+```python
+from layoutc.codec import Codec
+import glob
+
+codec = Codec()
+world_cup_files = glob.glob("src/layouts/NXL-World-Cup-*.json")
+for filename in world_cup_files:
+    with open(filename, "rb") as fp:
+        codec.load(fp)
+
+with open("world_cups_atlas.png", "wb") as fp:
+    codec.dump(fp)
+print(f"Created atlas from {len(world_cup_files)} World Cup layouts")
+```
+
+**Analyze tournament layout data:**
+```python
+import json
+
+with open("src/layouts/NXL-Chicago-2019.json", "r") as f:
+    layout_data = json.load(f)
+
+print(f"Chicago 2019 has {len(layout_data)} bunkers:")
+for bunker in layout_data[:3]:
+    print(f"  Bunker {bunker['bunkerID']}: ({bunker['xPosition']:.1f}m, {bunker['zPosition']:.1f}m, {bunker['yRotation']:.0f}°)")
+```
+
+**Create atlas and convert back:**
+```python
+from layoutc.codec import Codec
+
+# Round-trip conversion: JSON -> PNG -> JSON
+codec = Codec()
+
+with open("src/layouts/NXL-Barcelona-2019.json", "rb") as fp:
+    codec.load(fp)
+
+with open("barcelona_atlas.png", "wb") as fp:
+    codec.dump(fp)
+
+codec.clear()
+with open("barcelona_atlas.png", "rb") as fp:
+    codec.load(fp)
+
+with open("barcelona_restored.json", "wb") as fp:
+    codec.dump(fp)
+
+# Save back as JSON
+with open("barcelona_restored.json", "wb") as fp:
+    codec.dump(fp)
+
+print("Successfully round-tripped Barcelona layout: JSON -> PNG -> JSON")
+```
 
 #### Technical Details
 
@@ -249,6 +408,23 @@ pip install -e '.[dev]'
 
 # Run tests
 pytest -v
+
+# Try the examples with the included tournament data
+layoutc src/layouts/*.json all_tournaments.png
+layoutc src/layouts/NXL-World-Cup-2021.json world_cup.tsv
+```
+
+**Quick development test:**
+```python
+from layoutc.codec import Codec
+
+codec = Codec()
+with open("src/layouts/NXL-Amsterdam-2019.json", "rb") as fp:
+    codec.load(fp)
+
+print(f"Loaded {len(list(codec))} entities from Amsterdam 2019 layout")
+for entity_data in list(codec)[:3]:
+    print(f"  Entity: {entity_data}")
 ```
 
 ## License

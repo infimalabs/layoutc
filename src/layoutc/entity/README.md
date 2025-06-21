@@ -1,5 +1,7 @@
 # Entity Encoding Scheme
 
+> **Copy-Paste Ready**: All Python examples work with `pip install -e .` and can be copied (or piped) directly into `python3`. Examples use the included tournament layout files.
+
 ## Coordinate System and Quadrants
 
 The Entity class uses a quadrant-based coordinate system to represent spatial entities. The space is divided into four quadrants:
@@ -85,7 +87,11 @@ The `fold()` method converts entity coordinates from external units (meters and 
 
 Example:
 ```python
+from layoutc.entity import Entity
+from layoutc import Unit
+
 entity = Entity(x=1, y=1, z=90).fold(Unit.METER, Unit.DEGREE)
+print(f"Folded entity: {entity}")
 # Internal representation becomes:
 # x: 1000 mm, y: 1000 mm, z: 5400 arc minutes, q: Quadrant.NE
 ```
@@ -95,11 +101,15 @@ entity = Entity(x=1, y=1, z=90).fold(Unit.METER, Unit.DEGREE)
 The `@` operator converts FROM internal units TO display units. It's primarily used for displaying internal coordinates in user-friendly formats:
 
 ```python
+from layoutc.entity import Entity
+from layoutc import Unit
+
 # Entity with coordinates in internal units (millimeters and arc minutes)
 internal_entity = Entity(x=1000, y=2000, z=5400)
 
 # Convert TO meters and degrees for display
 display_entity = internal_entity @ Unit.METER @ Unit.DEGREE
+print(f"Display: x={display_entity.x}m, y={display_entity.y}m, z={display_entity.z}°")
 # Result: x=1.0, y=2.0, z=90.0
 ```
 
@@ -119,22 +129,36 @@ Different file formats have different unit assumptions:
 
 **For JSON-like data (coordinates in meters/degrees):**
 ```python
-# Game data format - coordinates in meters and degrees
+from layoutc.entity import Entity
+from layoutc import Unit
+
 entity = Entity(x=1.5, y=2.0, z=90).fold(Unit.METER, Unit.DEGREE)
+print(f"Folded from game units: {entity}")
 ```
 
 **For TSV-like data (coordinates in internal units):**
 ```python
-# Internal representation - coordinates in millimeters and arc minutes
+from layoutc.entity import Entity
+
 entity = Entity(x=1500, y=2000, z=5400)
+print(f"Internal units: {entity}")
 ```
 
 **For display (convert internal to user-friendly):**
 ```python
+from layoutc.entity import Entity
+from layoutc import Unit
+
+# Create entity in internal units
+internal_entity = Entity(x=1500, y=2000, z=5400)
+
 # Convert internal representation to display units
 display_entity = internal_entity @ Unit.METER @ Unit.DEGREE
-# or
-display_entity = internal_entity.unfold(Unit.METER, Unit.DEGREE)  # Also handles quadrants
+print(f"@ operator: x={display_entity.x}m, y={display_entity.y}m, z={display_entity.z}°")
+
+# Alternative using unfold (also handles quadrants properly)
+display_entity2 = internal_entity.unfold(Unit.METER, Unit.DEGREE)
+print(f"unfold(): x={display_entity2.x}m, y={display_entity2.y}m, z={display_entity2.z}°")
 ```
 
 ## Angle Wrapping
@@ -150,25 +174,36 @@ The Entity class includes validation to help catch common mistakes:
 ### Coordinate Validation
 
 ```python
-# This will raise a validation error - too large for a speedball field
-entity = Entity(x=500, y=100, z=90).fold(Unit.METER, Unit.DEGREE)  # 500m is huge!
+from layoutc.entity import Entity
+from layoutc import Unit
+
+try:
+    # This will raise a validation error - too large for a speedball field
+    entity = Entity(x=500, y=100, z=90).fold(Unit.METER, Unit.DEGREE)  # 500m is huge!
+except Exception as e:
+    print(f"Validation error: {e}")
 
 # Normal coordinates work fine
 entity = Entity(x=15, y=10, z=90).fold(Unit.METER, Unit.DEGREE)  # 15m x 10m field
+print(f"Valid entity: {entity}")
 ```
 
 ### Order Limits
 
-The system enforces a maximum of 256 layout groups per atlas:
-
 ```python
+from layoutc.codec import Codec
+
 codec = Codec()
 # Adding 256 groups works fine
 for i in range(256):
     codec.update([])
+print("Successfully added 256 groups")
 
-# This will raise: "Atlas limit exceeded"
-codec.update([])  # Group 257 fails
+try:
+    # This will raise: "Atlas limit exceeded"
+    codec.update([])  # Group 257 fails
+except Exception as e:
+    print(f"Atlas limit error: {e}")
 ```
 
 ### File Format Errors
@@ -199,3 +234,58 @@ The encoding scheme is compatible with common file formats:
 - PNG for efficient storage in image atlases
 
 This allows for versatile storage and transmission of spatial entity data.
+
+## Practical Examples
+
+Here are complete examples that work with the included tournament layout data:
+
+**Working with real tournament data:**
+```python
+from layoutc.entity import json as json_entity
+from layoutc.entity import Entity
+from layoutc import Unit
+import json
+
+with open("src/layouts/NXL-Paris-2019.json", "r") as f:
+    paris_layout = json.load(f)
+
+print(f"Paris 2019 layout has {len(paris_layout)} bunkers")
+
+first_bunker = paris_layout[0]
+entity = json_entity.Entity.make(first_bunker)
+print(f"Bunker {entity.k}: internal coords ({entity.x}, {entity.y}, {entity.z})")
+
+display = entity.unfold(Unit.METER, Unit.DEGREE)
+print(f"Display coords: ({display.x:.1f}m, {display.y:.1f}m, {display.z:.0f}°)")
+```
+
+**Encoding and decoding RGBA data:**
+```python
+from layoutc.entity import Entity
+from layoutc import Unit, Pitch
+
+entity = Entity(x=5.5, y=3.2, z=45).fold(Unit.METER, Unit.DEGREE)
+
+rgba = entity.rgba(Pitch.LORES)
+print(f"RGBA encoding: {rgba}")
+
+uv = entity.uv(Pitch.LORES, xaxis=0, yaxis=0)
+print(f"UV coordinates: {uv}")
+
+print(f"Group: {entity.g}, Version: {entity.v}, Kind: {entity.k}")
+```
+
+**Unit conversion examples:**
+```python
+from layoutc.entity import Entity
+from layoutc import Unit
+
+# Tournament data: 12.5m from center, 2.8m forward, facing 135°
+tournament_entity = Entity(x=12.5, y=2.8, z=135).fold(Unit.METER, Unit.DEGREE)
+print(f"Tournament data folded: {tournament_entity}")
+
+meters_degrees = tournament_entity @ Unit.METER @ Unit.DEGREE
+print(f"Back to meters/degrees: x={meters_degrees.x}m, y={meters_degrees.y}m, z={meters_degrees.z}°")
+
+print(f"Internal: {tournament_entity.x}mm, {tournament_entity.y}mm, {tournament_entity.z} arc-min")
+```
