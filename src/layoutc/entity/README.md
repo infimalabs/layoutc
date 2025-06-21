@@ -149,14 +149,9 @@ The Entity class includes validation to help catch common mistakes:
 
 ### Coordinate Validation
 
-When using `.fold()` with real-world units (meters/degrees), the system validates that coordinates are reasonable for speedball fields:
-
 ```python
 # This will raise a validation error - too large for a speedball field
 entity = Entity(x=500, y=100, z=90).fold(Unit.METER, Unit.DEGREE)  # 500m is huge!
-
-# Disable validation if you know what you're doing
-entity = Entity(x=500, y=100, z=90).fold(Unit.METER, Unit.DEGREE, validate=False)
 
 # Normal coordinates work fine
 entity = Entity(x=15, y=10, z=90).fold(Unit.METER, Unit.DEGREE)  # 15m x 10m field

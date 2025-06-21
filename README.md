@@ -271,10 +271,8 @@ pytest -v
 - Consider combining similar layouts into single groups if appropriate
 
 **"X coordinate seems unusually large"**
-- This validation helps catch unit confusion between meters and millimeters
 - JSON format expects coordinates in meters and rotations in degrees
 - TSV format uses internal units (millimeters and arc minutes)
-- Use `validate=False` in Python API to disable coordinate validation: `entity.fold(Unit.METER, Unit.DEGREE, validate=False)`
 
 **"Invalid PNG dimensions"**
 - PNG atlases must have specific aspect ratios: 5:4 (standard), 4:3 (large), or 1:1 (maximum)
