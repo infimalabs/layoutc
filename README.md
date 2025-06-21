@@ -190,7 +190,6 @@ internal_entity = Entity(x=1, y=1, z=90).fold(Unit.METER, Unit.DEGREE)
 ```
 
 </details>
-```
 
 The `Entity` class represents a spatial entity (bunker) with `x`, `y`, `z` coordinates and metadata attributes `g` (group), `v` (version), and `k` (kind/bunker ID).
 
