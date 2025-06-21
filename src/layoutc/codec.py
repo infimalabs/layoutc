@@ -3,11 +3,21 @@
 import io, numpy, collections
 
 from . import Size, Depth, Pitch, Unit, Order, Small
-from .entity import Entity
+# Import entity subclasses to register them for auto-detection
+from .entity import Entity, json as _, png as _
+
+
+class AtlasLimitExceededError(ValueError):
+    """Exception raised when the atlas limit is exceeded."""
+    def __init__(self, message: str = f"Atlas limit exceeded: cannot create more than {len(Order) - 1} layout groups"):
+        super().__init__(message)
 
 
 class Codec:
     """Spatial entity codec."""
+
+    AtlasLimit: int = len(Order) - 1
+    AtlasLimitExceededError = AtlasLimitExceededError
 
     def __init__(self, *tiles:dict, depth:None|Depth=None, pitch:None|Pitch=None, size:None|Size=Small):
         """Initialize the codec with optional depth, pitch, and atlas."""
@@ -39,8 +49,12 @@ class Codec:
     def update(self, entities:list[Entity], /, *scales:Unit, o:Order=Order.DEFAULT):
         """Update the atlas with the provided spatial entities."""
         if o == Order.DEFAULT or o-1 == len(self.atlas):
+            if len(self.atlas) >= self.AtlasLimit:
+                raise self.AtlasLimitExceededError
             self.atlas.append(collections.defaultdict(set))
             o = Order(len(self.atlas))
+        if o > self.AtlasLimit:
+            raise self.AtlasLimitExceededError
         for e in entities:
             e = e.fold(*scales, limit=self.limit, angle=self.angle)
             self.atlas[o-1][e.x, e.y, e.z, e.g, e.v, e.k].add(e.q)

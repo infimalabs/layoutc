@@ -1,10 +1,12 @@
 """Spatial entities from/into JSON layouts."""
 
-import io, json
+import io, json, typing
 
 from .. import GVK, Unit, Quadrant
 from .. import entity
-from .. import codec
+
+if typing.TYPE_CHECKING:
+    from .. import codec
 
 
 class Entity(entity.Entity):
@@ -33,7 +35,7 @@ class Entity(entity.Entity):
         return self
 
     @classmethod
-    def dump(cls, fp:io.BufferedWriter, codec:codec.Codec|None=None, /, **kwds):
+    def dump(cls, fp:io.BufferedWriter, codec:"codec.Codec|None"=None, /, **kwds):
         """Save JSON entities to a file pointer."""
         if codec is None:
             return fp.name.split('.')[-1] == cls.__module__.split('.')[-1]
@@ -44,7 +46,7 @@ class Entity(entity.Entity):
             json.dump(items, txtio, sort_keys=True, indent=2)
 
     @classmethod
-    def load(cls, fp:io.BufferedReader, codec:codec.Codec|None=None, /, **kwds):
+    def load(cls, fp:io.BufferedReader, codec:"codec.Codec|None"=None, /, **kwds):
         """Load JSON entities from a file pointer."""
         if codec is None:
             return fp.peek(256).translate(None, delete=b' \t\r\n').startswith((b'[[', b'[{'))

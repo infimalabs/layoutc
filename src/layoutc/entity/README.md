@@ -77,20 +77,64 @@ This bit-level encoding allows for categorization and versioning of entities wit
 
 The Order attribute is used when entities are part of an atlas collection. Entities with the same Order value are grouped into the same image within the atlas.
 
-## Unit Declaration with __matmul__
+## Unit Declaration and Conversion
 
-The `__matmul__` method (@) declares the units of an entity and converts them to internal units. For example:
+### The fold() Method
 
-- entity @ Unit.METER converts x and y values from meters to millimeters
-- entity @ Unit.DEGREE converts z value from degrees to arc minutes
-
-This operation allows users to define entities in familiar units (like meters and degrees) and then convert them to the internal representation.
+The `fold()` method converts entity coordinates from external units (meters and degrees) to internal units (millimeters and arc minutes) and determines the appropriate quadrant. This is the primary method for converting user-friendly coordinates to the internal representation.
 
 Example:
 ```python
-entity = Entity(x=1, y=1, z=90) @ Unit.METER @ Unit.DEGREE
+entity = Entity(x=1, y=1, z=90).fold(Unit.METER, Unit.DEGREE)
 # Internal representation becomes:
-# x: 1000 mm, y: 1000 mm, z: 5400 arc minutes
+# x: 1000 mm, y: 1000 mm, z: 5400 arc minutes, q: Quadrant.NE
+```
+
+### The @ (matmul) Operator
+
+The `@` operator converts FROM internal units TO display units. It's primarily used for displaying internal coordinates in user-friendly formats:
+
+```python
+# Entity with coordinates in internal units (millimeters and arc minutes)
+internal_entity = Entity(x=1000, y=2000, z=5400)
+
+# Convert TO meters and degrees for display
+display_entity = internal_entity @ Unit.METER @ Unit.DEGREE
+# Result: x=1.0, y=2.0, z=90.0
+```
+
+The `@` operator performs unit scaling:
+- `entity @ Unit.METER` converts x,y coordinates from millimeters to meters
+- `entity @ Unit.DEGREE` converts z coordinate from arc minutes to degrees
+
+### Format-Specific Unit Handling
+
+Different file formats have different unit assumptions:
+
+- **JSON format**: Input coordinates are in meters and degrees (game data format). The JSON loader automatically calls `.fold(Unit.METER, Unit.DEGREE)` to convert to internal units.
+- **TSV format**: Coordinates are stored directly in internal units (millimeters and arc minutes).
+- **PNG format**: Stores data in internal representation.
+
+### Practical Usage
+
+**For JSON-like data (coordinates in meters/degrees):**
+```python
+# Game data format - coordinates in meters and degrees
+entity = Entity(x=1.5, y=2.0, z=90).fold(Unit.METER, Unit.DEGREE)
+```
+
+**For TSV-like data (coordinates in internal units):**
+```python
+# Internal representation - coordinates in millimeters and arc minutes
+entity = Entity(x=1500, y=2000, z=5400)
+```
+
+**For display (convert internal to user-friendly):**
+```python
+# Convert internal representation to display units
+display_entity = internal_entity @ Unit.METER @ Unit.DEGREE
+# or
+display_entity = internal_entity.unfold(Unit.METER, Unit.DEGREE)  # Also handles quadrants
 ```
 
 ## Angle Wrapping
@@ -98,6 +142,47 @@ entity = Entity(x=1, y=1, z=90) @ Unit.METER @ Unit.DEGREE
 Angles are wrapped to the range 0-360 degrees (0-21600 arc minutes) during folding and unfolding operations. This ensures consistent representation regardless of input values.
 
 For example, 450° wraps to 90° but is stored as 5400 arc minutes internally.
+
+## Error Handling and Validation
+
+The Entity class includes validation to help catch common mistakes:
+
+### Coordinate Validation
+
+When using `.fold()` with real-world units (meters/degrees), the system validates that coordinates are reasonable for speedball fields:
+
+```python
+# This will raise a validation error - too large for a speedball field
+entity = Entity(x=500, y=100, z=90).fold(Unit.METER, Unit.DEGREE)  # 500m is huge!
+
+# Disable validation if you know what you're doing
+entity = Entity(x=500, y=100, z=90).fold(Unit.METER, Unit.DEGREE, validate=False)
+
+# Normal coordinates work fine
+entity = Entity(x=15, y=10, z=90).fold(Unit.METER, Unit.DEGREE)  # 15m x 10m field
+```
+
+### Order Limits
+
+The system enforces a maximum of 256 layout groups per atlas:
+
+```python
+codec = Codec()
+# Adding 256 groups works fine
+for i in range(256):
+    codec.update([])
+
+# This will raise: "Atlas limit exceeded"
+codec.update([])  # Group 257 fails
+```
+
+### File Format Errors
+
+The loading system provides helpful error messages for common file issues:
+- Invalid JSON syntax
+- PNG files with wrong dimensions
+- Empty or corrupted files
+- Missing required fields in layout data
 
 ## Precision and Rounding
 

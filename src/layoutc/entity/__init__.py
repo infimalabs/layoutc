@@ -3,7 +3,9 @@
 import typing, collections, csv, io
 
 from .. import Depth, Pitch, Unit, Order, Quadrant, GVK
-from .. import codec as _codec
+
+if typing.TYPE_CHECKING:
+    from .. import codec as _codec
 
 
 class Entity(collections.namedtuple('Entity', (*'oqxyzgvk',), defaults=(Order.DEFAULT, Quadrant.DEFAULT, 0.0, 0.0, 0.0, GVK.DEFAULT, GVK.DEFAULT, GVK.DEFAULT))):

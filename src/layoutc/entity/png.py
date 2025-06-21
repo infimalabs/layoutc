@@ -1,16 +1,19 @@
 """Spatial entities from/into PNG layouts."""
 
-import io, numpy
+import io, numpy, typing
 from PIL import Image, PngImagePlugin
 
 from .. import Size, Small, Large, GVK, Order, Quadrant, Unit, Depth
-from .. import codec, entity
+from .. import entity
+
+if typing.TYPE_CHECKING:
+    from .. import codec
 
 
 class Entity(entity.Entity):
 
     @classmethod
-    def dump(cls, fp:io.BufferedWriter, codec:codec.Codec|None=None, /, **kwds):
+    def dump(cls, fp:io.BufferedWriter, codec:"codec.Codec|None"=None, /, **kwds):
         """Save PNG entities to a file pointer."""
         if codec is None:
             return fp.name.split('.')[-1] == cls.__module__.split('.')[-1]
@@ -33,7 +36,7 @@ class Entity(entity.Entity):
         image.save(fp, "PNG", optimize=True, pnginfo=pnginfo)
 
     @classmethod
-    def load(cls, fp:io.BufferedReader, codec:codec.Codec|None=None, /, **kwds):
+    def load(cls, fp:io.BufferedReader, codec:"codec.Codec|None"=None, /, **kwds):
         """Load PNG entities from a file pointer."""
         if codec is None:
             return fp.peek(len(PngImagePlugin._MAGIC)).startswith(PngImagePlugin._MAGIC)

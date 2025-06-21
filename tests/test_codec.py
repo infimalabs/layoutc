@@ -106,3 +106,21 @@ def test_codec(request, pitch, depth, size, expected):
         assert pixels[u-1-2*n, v] == pixel
         assert pixels[u, v-1-2*m] == pixel
         assert pixels[u-1-2*n, v-1-2*m] == pixel
+
+
+def test_order_limit_validation():
+    """Test that Order limit is enforced."""
+    codec = Codec()
+
+    # Should work up to 256
+    for i in range(1, 257):
+        codec.update([])
+        assert len(codec.atlas) == i
+
+    # Should fail at 257
+    with pytest.raises(Codec.AtlasLimitExceededError, match="Atlas limit exceeded"):
+        codec.update([])
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

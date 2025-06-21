@@ -178,3 +178,7 @@ def test_entity_dump_load_json():
     fp.peek.return_value = b"[["
     assert layoutc.entity.json.Entity.dump(fp) == True
     assert layoutc.entity.json.Entity.load(fp) == True
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

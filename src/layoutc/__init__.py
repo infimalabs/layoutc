@@ -43,7 +43,7 @@ class GVK(enum.IntEnum):
 
 class Order(enum.IntEnum):
     """Spatial atlas order."""
-    DEFAULT = 0; locals().update((f'N{n}', n) for n in range(1, 2**8+1))
+    DEFAULT = 0; locals().update((f'{n}', n) for n in range(1, 2**8+1))
 
 
 class Quadrant(enum.IntEnum):
