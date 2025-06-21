@@ -2,19 +2,36 @@
 name = "layoutc"
 version = "0.1.0"
 description = "Speedball arenas to splatmap atlases."
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Infima Labs", email = "infimalabs@infimalabs.com"}
+]
 dependencies = ["defusedxml", "numpy", "pytest", "Pillow"]
-classifiers = ["Programming Language :: Python :: 3", "Operating System :: OS Independent"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11", 
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Games/Entertainment",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+    "Topic :: Scientific/Engineering :: Visualization"
+]
 requires-python = ">=3.10"
+
+[project.urls]
+Homepage = "https://github.com/infimalabs/layoutc"
+Repository = "https://github.com/infimalabs/layoutc.git"
+Issues = "https://github.com/infimalabs/layoutc/issues"
 
 [project.scripts]
 layoutc = "layoutc.__main__:main"
 
 [project.optional-dependencies]
 dev = ["ipython"]
-
-[[project.authors]]
-name = "Infima Labs"
-email = "infimalabs@infimalabs.com"
 
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib"]
