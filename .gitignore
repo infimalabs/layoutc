@@ -5,6 +5,7 @@
 # -- Python
 # Ignore the build output
 /build/
+/dist/
 
 # Ignore Cargo's lock file because it's not used
 # to determine versions of consumers of the library, Cargo.toml is.
